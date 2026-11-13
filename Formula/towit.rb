@@ -1,8 +1,8 @@
 class Towit < Formula
   desc "Searchable archive of your Claude Code conversations"
   homepage "https://github.com/chrisbloom7/to-wit"
-  url "https://github.com/chrisbloom7/to-wit/archive/refs/tags/v0.11.1.tar.gz"
-  sha256 "9105acca9051eb3841eaea93493c01ad822708d94bf1c7d95a284daeebec4bf2"
+  url "https://github.com/chrisbloom7/to-wit/archive/refs/tags/v0.12.0.tar.gz"
+  sha256 "35e42435730e16efc2b8642c8422e625a9e8838a9ce259df4d471e7a200cfbd5"
   license "GPL-3.0-only"
 
   depends_on "python@3.15"
