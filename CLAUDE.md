@@ -21,7 +21,10 @@ need them to see your change; `brew style <path>` works on any checkout.
 - A new upstream release needs a bump PR: branch `<formula>-X.Y.Z`, commit and PR title `<formula> X.Y.Z`
   (see `git log`), merged as a normal PR with a merge commit.
 - The change is the formula's `url` and `sha256` (the tag tarball from the upstream repo, `vX.Y.Z`).
-  The `release-towit` skill in the `to-wit` repo has a `bump-tap-formula` script that rewrites them.
+  `script/bump-formula <X.Y.Z> --formula <name>` rewrites them (and nothing else): it downloads the
+  tag tarball, never runs git, and leaves the diff for you to review, commit and open as the PR.
+  `--repo` and `--tarball` are optional; see the header of the script. The shared `release` skill
+  (ai-tools plugin) calls it from each project's release flow.
 - `.github/workflows/autobump.yml` also runs `brew bump --open-pr` daily (15:30 UTC) and can open the
   same PR on its own.
 - `tests.yml` (`brew test-bot`) runs on every PR and push to `main`: tap syntax, then build and test of
