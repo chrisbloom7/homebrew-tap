@@ -28,7 +28,8 @@ need them to see your change; `brew style <path>` works on any checkout.
   `script/bump-formula <X.Y.Z> --formula <name>` rewrites them (and nothing else): it downloads the
   tag tarball, never runs git, and leaves the diff for you to review, commit and open as the PR.
   `--repo` and `--tarball` are optional; see the header of the script. The shared `release` skill
-  (ai-tools plugin) calls it from each project's release flow.
+  (`chrisbloom7-development` plugin, from the `ai-tools` marketplace) calls it from each project's
+  release flow.
 - `.github/workflows/autobump.yml` also runs `brew bump --open-pr` daily (15:30 UTC) and can open the
   same PR on its own.
 - `tests.yml` (`brew test-bot`) runs on every PR and push to `main`: tap syntax, then build and test of
