@@ -5,6 +5,7 @@
 | Formula | Description | Install |
 |---|---|---|
 | [`towit`](https://github.com/chrisbloom7/to-wit) | Searchable archive of your Claude Code conversations | `brew install chrisbloom7/tap/towit` |
+| [`wt-cleanup`](https://github.com/chrisbloom7/wt-cleanup) | Interactive fzf cleanup for Worktrunk worktrees and branches | `brew install chrisbloom7/tap/wt-cleanup` |
 
 To list what the tap currently offers, run `brew search chrisbloom7/tap/`.
 
