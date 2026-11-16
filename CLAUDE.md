@@ -48,9 +48,9 @@ need them to see your change; `brew style <path>` works on any checkout.
 
 ## Claude Code setup
 
-`.claude/settings.json` allows `brew style`, `brew audit` and `brew test`, and registers
-`brew-style.sh`, a hook that runs `brew style --fix` on edited `Formula/*.rb` files and reports what
-is left. It skips quietly when `brew` or `jq` is missing.
+`.claude/settings.json` holds the command allowlist and registers two PostToolUse hooks that lint edited
+`Formula/*.rb` (`brew style --fix`) and `script/*` (`shellcheck`, errors only) files; both skip quietly
+when their tools are missing.
 
 Changes to `.claude/` (hooks and the allowlist) and to this file run or steer Claude Code on the machine
 of whoever opens the repo, so `.github/CODEOWNERS` routes them to the maintainer. When reviewing an
