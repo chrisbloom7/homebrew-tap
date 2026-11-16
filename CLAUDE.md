@@ -43,3 +43,8 @@ need them to see your change; `brew style <path>` works on any checkout.
 `.claude/settings.json` allows `brew style`, `brew audit` and `brew test`, and registers
 `brew-style.sh`, a hook that runs `brew style --fix` on edited `Formula/*.rb` files and reports what
 is left. It skips quietly when `brew` or `jq` is missing.
+
+Changes to `.claude/` (hooks and the allowlist) and to this file run or steer Claude Code on the machine
+of whoever opens the repo, so `.github/CODEOWNERS` routes them to the maintainer. When reviewing an
+outside PR that touches them, read the diff first (`gh pr diff <number> -- .claude CLAUDE.md`) before
+checking the branch out and starting Claude Code there.
