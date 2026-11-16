@@ -33,8 +33,8 @@ need them to see your change; `brew style <path>` works on any checkout.
 - `.github/workflows/autobump.yml` also runs `brew bump --open-pr` daily (15:30 UTC) and can open the
   same PR on its own.
 - `tests.yml` (`brew test-bot`) runs on every PR and push to `main`: tap syntax, then build and test of
-  the formulae on macOS and Linux. `publish.yml` (`brew pr-pull`, started by hand with a PR number) is
-  the stock bottle-publish workflow from `brew tap-new`.
+  the formulae on macOS and Linux. The tap publishes no bottles: every formula installs from its source
+  tarball, so there is no bottle-publish workflow.
 
 ## Gotchas
 
