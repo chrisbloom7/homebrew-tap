@@ -1,8 +1,8 @@
 # CLAUDE.md
 
 `chrisbloom7/tap` is a personal Homebrew tap (`brew tap chrisbloom7/tap`). Each formula is one file in
-`Formula/`; the tap has no application code of its own. Upstream projects: `to-wit` (`towit`) and
-`wt-cleanup`.
+`Formula/`; the tap has no application code of its own. Upstream projects: `to-wit` (`towit`),
+`wt-cleanup` and `brewfile-tools`.
 
 ## Commands
 
@@ -32,9 +32,11 @@ need them to see your change; `brew style <path>` works on any checkout.
   release flow.
 - `.github/workflows/autobump.yml` also runs `brew bump --open-pr` daily (15:30 UTC) and can open the
   same PR on its own.
-- `tests.yml` (`brew test-bot`) runs on every PR and push to `main`: tap syntax, then build and test of
-  the formulae on macOS and Linux. The tap publishes no bottles: every formula installs from its source
-  tarball, so there is no bottle-publish workflow.
+- `tests.yml` runs on every PR and push to `main`. Its `test-bot` job (`brew test-bot`) checks tap syntax
+  always, and builds and tests the formulae on macOS and Linux for PRs only. Its `actionlint`, `zizmor`
+  (offline) and `shellcheck` (`shellcheck -S warning script/*`) jobs lint the workflows and scripts. The
+  `ci-gate` job needs all four and is the only required check on `main`. The tap publishes no bottles:
+  every formula installs from its source tarball, so there is no bottle-publish workflow.
 
 ## Gotchas
 
@@ -50,7 +52,8 @@ need them to see your change; `brew style <path>` works on any checkout.
 
 `.claude/settings.json` holds the command allowlist and registers two PostToolUse hooks that lint edited
 `Formula/*.rb` (`brew style --fix`) and `script/*` (`shellcheck`, errors only) files; both skip quietly
-when their tools are missing.
+when their tools are missing. The hook blocks on `-S error` but CI fails on `-S warning`, so a script can
+pass the hook and still fail CI.
 
 Changes to `.claude/` (hooks and the allowlist) and to this file run or steer Claude Code on the machine
 of whoever opens the repo, so `.github/CODEOWNERS` routes them to the maintainer. When reviewing an
