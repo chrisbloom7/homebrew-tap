@@ -9,6 +9,10 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -24,6 +28,7 @@ jobs:
               image: ghcr.io/homebrew/brew:main
               options: --privileged
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     container: ${{ fromJSON(toJSON(matrix.container)) }} # zizmor: ignore[unpinned-images]
     permissions:
       actions: read
@@ -51,3 +56,22 @@ jobs:
       - run: brew test-bot --only-tap-syntax
       - run: brew test-bot --only-formulae
         if: github.event_name == 'pull_request'
+
+  # Stable aggregate check for the branch ruleset: unlike the matrix-generated
+  # test-bot names, this name does not change when the matrix or image changes.
+  ci-gate:
+    if: always()
+    needs: test-bot
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Require every needed job to succeed
+        env:
+          RESULTS: ${{ toJSON(needs.*.result) }}
+        run: |
+          echo "needed job results: ${RESULTS}"
+          if [ "$(jq -r 'all(. == "success")' <<<"${RESULTS}")" != "true" ]; then
+            echo "::error::A needed job did not succeed"
+            exit 1
+          fi
