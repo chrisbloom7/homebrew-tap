@@ -10,7 +10,11 @@
 brew style Formula/<name>.rb                         # lint (rubocop with Homebrew's config)
 brew audit --strict --online chrisbloom7/tap/<name>  # formula audit
 brew reinstall chrisbloom7/tap/<name> && brew test chrisbloom7/tap/<name>   # build and run the test block
+bats test/                                           # tests for script/bump-formula (no network, brew or git)
 ```
+
+`script-tests.yml` runs `bats test/` in CI when `script/` or `test/` changes. Install bats with
+`brew install bats-core`.
 
 `brew audit` and `brew test` by name act on Homebrew's own checkout of the tap
 (`$(brew --repository chrisbloom7/tap)`), not on a worktree or clone elsewhere. Edit there when you
