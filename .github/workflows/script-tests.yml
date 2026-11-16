@@ -1,0 +1,32 @@
+name: script tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'script/**'
+      - 'test/**'
+      - '.github/workflows/script-tests.yml'
+  pull_request:
+    paths:
+      - 'script/**'
+      - 'test/**'
+      - '.github/workflows/script-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  bats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Install bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+
+      - name: Run the script tests
+        run: bats test/
