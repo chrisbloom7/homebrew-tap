@@ -129,8 +129,13 @@ assert_no_stray_files() {
   grep -qx '  url "https://github.com/chrisbloom7/to-wit/archive/refs/tags/v0.13.2.tar.gz"' "${TAP}/Formula/towit.rb"
   grep -qx "  sha256 \"${SHA}\"" "${TAP}/Formula/towit.rb"
   [[ "${SHA}" =~ ^[0-9a-f]{64}$ ]]
-  ! grep -q 'v0.13.1' "${TAP}/Formula/towit.rb"
-  ! grep -q 'c7587adf' "${TAP}/Formula/towit.rb"
+  # The previous url and sha256 come from the fixture copy, so this does not depend on which
+  # version Formula/towit.rb is at today.
+  old_url="$(grep '^  url "' "${ORIG}")"
+  old_sha="$(sed -n 's/^  sha256 "\(.*\)"$/\1/p' "${ORIG}")"
+  [ -n "${old_url}" ] && [ -n "${old_sha}" ]
+  ! grep -qF -- "${old_url}" "${TAP}/Formula/towit.rb"
+  ! grep -qF -- "${old_sha}" "${TAP}/Formula/towit.rb"
 }
 
 @test "leaves every other line byte-identical and keeps line positions" {
@@ -160,8 +165,12 @@ assert_no_stray_files() {
   [ "${status}" -eq 0 ]
   [[ "${output}" == *"0.13.2"* ]]
   [[ "${output}" == *"${SHA}"* ]]
-  [[ "${output}" == *"v0.13.1.tar.gz"* ]]
-  [[ "${output}" == *"c7587adf"* ]]
+  # Old tarball name and the start of the old sha256, read from the fixture copy (see above).
+  old_tarball="$(sed -n 's|^  url ".*/\(v[^/"]*\.tar\.gz\)"$|\1|p' "${ORIG}")"
+  old_sha="$(sed -n 's/^  sha256 "\(.*\)"$/\1/p' "${ORIG}")"
+  [ -n "${old_tarball}" ] && [ -n "${old_sha}" ]
+  [[ "${output}" == *"${old_tarball}"* ]]
+  [[ "${output}" == *"${old_sha:0:8}"* ]]
   [[ "${output}" == *"Nothing was committed"* ]]
 }
 
