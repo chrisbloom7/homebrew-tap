@@ -56,3 +56,5 @@ Changes to `.claude/` (hooks and the allowlist) and to this file run or steer Cl
 of whoever opens the repo, so `.github/CODEOWNERS` routes them to the maintainer. When reviewing an
 outside PR that touches them, read the diff first (`gh pr diff <number> -- .claude CLAUDE.md`) before
 checking the branch out and starting Claude Code there.
+
+`.github/CODEOWNERS` also routes `.github/`, `script/` and `Formula/` to the maintainer.

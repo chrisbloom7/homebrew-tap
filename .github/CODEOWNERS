@@ -2,3 +2,12 @@
 /.claude/ @chrisbloom7
 /CLAUDE.md @chrisbloom7
 /.github/CODEOWNERS @chrisbloom7
+
+# Workflows run with this repository's permissions (some with write access).
+/.github/ @chrisbloom7
+
+# script/bump-formula rewrites formulae.
+/script/ @chrisbloom7
+
+# What users install.
+/Formula/ @chrisbloom7
