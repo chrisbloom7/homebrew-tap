@@ -1,8 +1,8 @@
 class WtCleanup < Formula
   desc "Interactive fzf cleanup for Worktrunk worktrees and branches"
   homepage "https://github.com/chrisbloom7/wt-cleanup"
-  url "https://github.com/chrisbloom7/wt-cleanup/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "55ec4dea62a170ab789fc725748b98ad0b46d92d4c6c96f45412a349ba89d444"
+  url "https://github.com/chrisbloom7/wt-cleanup/archive/refs/tags/v0.1.1.tar.gz"
+  sha256 "3f1721c5c102ce6cf6330dfb89405d97e454f8c5ce00650f2a990f201f0c805f"
   license "MIT"
 
   depends_on "bash"
