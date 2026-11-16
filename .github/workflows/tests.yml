@@ -57,11 +57,80 @@ jobs:
       - run: brew test-bot --only-formulae
         if: github.event_name == 'pull_request'
 
+  # Lint the workflows and scripts. These are plain release binaries pinned by
+  # version and verified against a hardcoded sha256 (no third-party action).
+  actionlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install actionlint (pinned, checksum-verified)
+        run: |
+          version=1.7.12
+          sha256=8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+          curl -fsSL -o actionlint.tar.gz \
+            "https://github.com/rhysd/actionlint/releases/download/v${version}/actionlint_${version}_linux_amd64.tar.gz"
+          echo "${sha256}  actionlint.tar.gz" | sha256sum --check
+          mkdir "$RUNNER_TEMP/actionlint"
+          tar -xzf actionlint.tar.gz -C "$RUNNER_TEMP/actionlint" actionlint
+          rm actionlint.tar.gz
+          echo "$RUNNER_TEMP/actionlint" >> "$GITHUB_PATH"
+
+      # Uses the runner's preinstalled shellcheck for the run: blocks.
+      - name: Lint workflows
+        run: actionlint -color
+
+  zizmor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install zizmor (pinned, checksum-verified)
+        run: |
+          version=1.32.0
+          sha256=bb110cc765eca9cd7efb2e284a956be5974c60027b0970f16397d86208a9957b
+          curl -fsSL -o zizmor.tar.gz \
+            "https://github.com/woodruffw/zizmor/releases/download/v${version}/zizmor-x86_64-unknown-linux-gnu.tar.gz"
+          echo "${sha256}  zizmor.tar.gz" | sha256sum --check
+          mkdir "$RUNNER_TEMP/zizmor"
+          tar -xzf zizmor.tar.gz -C "$RUNNER_TEMP/zizmor"
+          rm zizmor.tar.gz
+          echo "$RUNNER_TEMP/zizmor" >> "$GITHUB_PATH"
+
+      # --offline: no network and no token, so the audits that query GitHub
+      # (for example known-vulnerable actions) are skipped.
+      - name: Audit workflows
+        run: zizmor --offline .github
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Runner's preinstalled shellcheck; warnings and errors fail the job.
+      - name: Lint shell scripts
+        run: shellcheck -S warning script/*
+
   # Stable aggregate check for the branch ruleset: unlike the matrix-generated
   # test-bot names, this name does not change when the matrix or image changes.
   ci-gate:
     if: always()
-    needs: test-bot
+    needs: [test-bot, actionlint, zizmor, shellcheck]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: {}
