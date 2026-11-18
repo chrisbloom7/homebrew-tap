@@ -30,8 +30,9 @@ need them to see your change; `brew style <path>` works on any checkout.
   `--repo` and `--tarball` are optional; see the header of the script. The shared `release` skill
   (`chrisbloom7-development` plugin, from the `ai-tools` marketplace) calls it from each project's
   release flow.
-- `.github/workflows/autobump.yml` also runs `brew bump --open-pr` daily (15:30 UTC) and can open the
-  same PR on its own.
+- Bumps are always opened by hand through that release flow. There is deliberately no scheduled
+  `brew bump --open-pr` workflow (the stock `brew tap-new` autobump was removed): it would be a second
+  path that conflicts with how each project's release skill bumps the tap.
 - `tests.yml` runs on every PR and push to `main`. Its `test-bot` job (`brew test-bot`) checks tap syntax
   always, and builds and tests the formulae on macOS and Linux for PRs only. Its `actionlint`, `zizmor`
   (offline) and `shellcheck` (`shellcheck -S warning script/*`) jobs lint the workflows and scripts. The
